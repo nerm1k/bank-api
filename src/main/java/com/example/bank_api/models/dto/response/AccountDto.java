@@ -8,17 +8,22 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
+@Schema(description = "Данные о счете")
 public class AccountDto{
 
     @NotNull
+    @Schema(description = "Идентификатор счета", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
     @NotNull
+    @Schema(description = "Текущий баланс счета", requiredMode = Schema.RequiredMode.REQUIRED)
     private BigDecimal balance;
 
     @NotNull
+    @Schema(description = "Пинкод счета", requiredMode = Schema.RequiredMode.REQUIRED)
     private String pin;
 
     @NotNull
+    @Schema(description = "Идентификатор владельца счета", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long beneficiaryId;
 }
