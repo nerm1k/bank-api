@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.30.xsd">
+
+
+
+    <changeSet id="create_transaction_table_sequence" author="Roman">
+        <createSequence sequenceName="transaction_id_sequence" startValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet id="create_transaction_table" author="Roman">
+        <createTable tableName="transactions">
+            <column name="transaction_id" type="bigint" defaultValueSequenceNext="transaction_id_sequence">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_from" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_transaction_account_from"
+                             references="accounts(account_id)"
+                />
+            </column>
+            <column name="account_to" type="bigint">
+                <constraints nullable="true"
+                             foreignKeyName="fk_transaction_account_to"
+                             references="accounts(account_id)"
+                />
+            </column>
+            <column name="balance_change" type="decimal(19,2)">
+                <constraints nullable="false" />
+            </column>
+            <column name="type" type="varchar(16)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

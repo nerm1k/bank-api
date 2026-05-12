@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.30.xsd">
+
+
+
+    <changeSet id="create_account_table_sequence" author="Roman">
+        <createSequence sequenceName="account_id_sequence" startValue="1" incrementBy="1" />
+    </changeSet>
+
+    <changeSet id="create_account_table" author="Roman">
+        <createTable tableName="accounts">
+            <column name="account_id" type="bigint" defaultValueSequenceNext="account_id_sequence">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="balance" type="decimal(19,2)" defaultValueNumeric="0.00">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pin" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="beneficiary_id" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_account_beneficiary"
+                             references="beneficiary(beneficiary_id)"
+                />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

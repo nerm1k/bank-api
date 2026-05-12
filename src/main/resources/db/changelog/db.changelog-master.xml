@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.30.xsd">
+
+    <include file="v1.0_1_create_beneficiary.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_2_create_account.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_3_rename_beneficiary_table.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_4_insert_initial_data_accounts_and_beneficiaries.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_5_alter_accounts_table_pin_type.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_6_create_transactions_table.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_7_alter_transactions_table.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0_8_alter_transactions_table_default_value_created_at.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

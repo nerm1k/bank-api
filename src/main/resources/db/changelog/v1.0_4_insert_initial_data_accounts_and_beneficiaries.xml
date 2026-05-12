@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.30.xsd">
+
+
+
+    <changeSet id="insert_initial_data_accounts_and_beneficiaries" author="Roman">
+        <insert tableName="beneficiaries">
+            <column name="name" value="Роман" />
+        </insert>
+        <insert tableName="beneficiaries">
+            <column name="name" value="Сергей" />
+        </insert>
+        <insert tableName="beneficiaries">
+            <column name="name" value="Егор" />
+        </insert>
+        <insert tableName="beneficiaries">
+            <column name="name" value="Дмитрий" />
+        </insert>
+        <insert tableName="beneficiaries">
+            <column name="name" value="Роман" />
+        </insert>
+        <insert tableName="beneficiaries">
+            <column name="name" value="Яна" />
+        </insert>
+
+        <insert tableName="accounts">
+            <column name="balance" value="0.00" />
+            <column name="pin" value="7777" />
+            <column name="beneficiary_id" value="1" />
+        </insert>
+        <insert tableName="accounts">
+            <column name="balance" value="11111.24" />
+            <column name="pin" value="5555" />
+            <column name="beneficiary_id" value="1" />
+        </insert>
+        <insert tableName="accounts">
+            <column name="balance" value="54622.45" />
+            <column name="pin" value="3333" />
+            <column name="beneficiary_id" value="1" />
+        </insert>
+        <insert tableName="accounts">
+            <column name="balance" value="0.00" />
+            <column name="pin" value="6555" />
+            <column name="beneficiary_id" value="2" />
+        </insert>
+        <insert tableName="accounts">
+            <column name="balance" value="0.00" />
+            <column name="pin" value="1100" />
+            <column name="beneficiary_id" value="3" />
+        </insert>
+        <insert tableName="accounts">
+            <column name="balance" value="0.00" />
+            <column name="pin" value="1111" />
+            <column name="beneficiary_id" value="4" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>
