@@ -10,6 +10,8 @@ import com.example.bank_api.models.mappers.BeneficiaryMapper;
 import com.example.bank_api.repositories.AccountRepository;
 import com.example.bank_api.repositories.BeneficiaryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -17,23 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BeneficiaryService {
     private final BeneficiaryRepository beneficiaryRepository;
     private final BeneficiaryMapper beneficiaryMapper;
-//    private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
-
-
-    public BeneficiaryService(BeneficiaryRepository beneficiaryRepository,
-                              BeneficiaryMapper beneficiaryMapper,
-//                              AccountRepository accountRepository,
-                              AccountMapper accountMapper) {
-        this.beneficiaryRepository = beneficiaryRepository;
-        this.beneficiaryMapper = beneficiaryMapper;
-//        this.accountRepository = accountRepository;
-        this.accountMapper = accountMapper;
-    }
-
 
     public List<BeneficiaryDto> findAllBeneficiaries() {
         List<BeneficiaryEntity> beneficiaryEntityList = beneficiaryRepository.findAll();
@@ -55,8 +45,6 @@ public class BeneficiaryService {
                 .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + beneficiaryId + " нет."));
 
         List<AccountEntity>  accountEntityList = beneficiaryEntity.getAccounts();
-
-//        List<AccountEntity> accountEntityList = this.accountRepository.findAllAccountsByBeneficiaryId(beneficiaryId);
 
         return accountEntityList.stream()
                 .sorted(Comparator.comparing(AccountEntity::getId))

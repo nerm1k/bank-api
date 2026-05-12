@@ -14,25 +14,29 @@ public class GlobalExceptionsHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException ex){
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+        errorResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST).setMessage(ex.getMessage());
         return ResponseEntity.status(400).body(errorResponseDto);
     }
 
     @ExceptionHandler(InvalidPinException.class)
     public ResponseEntity<ErrorResponseDto> handleInvalidPinException(InvalidPinException ex){
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.FORBIDDEN, ex.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+        errorResponseDto.setHttpStatus(HttpStatus.FORBIDDEN).setMessage(ex.getMessage());
         return ResponseEntity.status(403).body(errorResponseDto);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleEntityNotFoundException(EntityNotFoundException ex){
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.NOT_FOUND, ex.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+        errorResponseDto.setHttpStatus(HttpStatus.NOT_FOUND).setMessage(ex.getMessage());
         return ResponseEntity.status(404).body(errorResponseDto);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(HttpStatus.BAD_REQUEST, ex.getFieldError().getDefaultMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+        errorResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST).setMessage(ex.getFieldError().getDefaultMessage());
         return ResponseEntity.status(400).body(errorResponseDto);
     }
 }

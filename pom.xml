@@ -55,10 +55,18 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>prg.projetlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.46</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>0.2.0</version>
+			<scope>compile</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -110,15 +118,18 @@
 					<target>1.8</target> <!-- depending on your project -->
 					<annotationProcessorPaths>
 						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.46</version>
+						</path>
+						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>${org.mapstruct.version}</version>
 						</path>
-						<!-- other annotation processors -->
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

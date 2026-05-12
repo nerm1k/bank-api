@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/beneficiaries")
+@RequiredArgsConstructor
 public class BeneficiaryController {
     private final BeneficiaryService beneficiaryService;
-
-
-    public BeneficiaryController(BeneficiaryService beneficiaryService) {
-        this.beneficiaryService = beneficiaryService;
-    }
 
     @GetMapping
     @Operation(summary = "Получить всех клиентов", description = "В ответе возвращается список объектов Beneficiary c полями id и name.")

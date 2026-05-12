@@ -1,6 +1,10 @@
 package com.example.bank_api.models.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -9,6 +13,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "transactions")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransactionEntity {
     @Id
     @Column(name = "transaction_id")
@@ -16,15 +24,9 @@ public class TransactionEntity {
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_id_sequence", allocationSize = 1)
     private Long id;
 
-//    @Column(name = "account_from_id", nullable = false)
-//    private Long accountFromId;
-
     @ManyToOne
     @JoinColumn(name = "account_from_id", nullable = false)
     private AccountEntity accountFrom;
-
-//    @Column(name = "account_to_id", nullable = true)
-//    private Long accountToId;
 
     @ManyToOne
     @JoinColumn(name = "account_to_id", nullable = true)
@@ -40,10 +42,6 @@ public class TransactionEntity {
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public TransactionEntity(){
-
-    }
-
     public TransactionEntity(AccountEntity accountFrom,
                              BigDecimal balanceChange,
                              TransactionType transactionType)
@@ -62,89 +60,6 @@ public class TransactionEntity {
         this.accountTo = accountTo;
         this.balanceChange = balanceChange;
         this.transactionType = transactionType;
-    }
-
-    public TransactionEntity(Long id,
-//                             Long accountFromId,
-                             AccountEntity accountFrom,
-//                             Long accountToId,
-                             AccountEntity accountTo,
-                             BigDecimal balanceChange,
-                             TransactionType transactionType,
-                             LocalDateTime createdAt)
-    {
-        this.id = id;
-//        this.accountFromId = accountFromId;
-        this.accountFrom = accountFrom;
-//        this.accountToId = accountToId;
-        this.accountTo = accountTo;
-        this.balanceChange = balanceChange;
-        this.transactionType = transactionType;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-//    public Long getAccountFromId() {
-//        return accountFromId;
-//    }
-//
-//    public void setAccountFromId(Long accountFromId) {
-//        this.accountFromId = accountFromId;
-//    }
-
-    public AccountEntity getAccountFrom() {
-        return accountFrom;
-    }
-
-    public void setAccountFrom(AccountEntity accountFrom) {
-        this.accountFrom = accountFrom;
-    }
-
-//    public Long getAccountToId() {
-//        return accountToId;
-//    }
-//
-//    public void setAccountToId(Long accountToId) {
-//        this.accountToId = accountToId;
-//    }
-
-    public AccountEntity getAccountTo() {
-        return accountTo;
-    }
-
-    public void setAccountTo(AccountEntity accountTo) {
-        this.accountTo = accountTo;
-    }
-
-    public BigDecimal getBalanceChange() {
-        return balanceChange;
-    }
-
-    public void setBalanceChange(BigDecimal balanceChange) {
-        this.balanceChange = balanceChange;
-    }
-
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }
 

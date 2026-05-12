@@ -14,6 +14,8 @@ import com.example.bank_api.repositories.BeneficiaryRepository;
 import com.example.bank_api.repositories.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,22 +26,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
     private final BeneficiaryRepository beneficiaryRepository;
-
     private final TransactionRepository transactionRepository;
     private final AccountMapper accountMapper;
-
-    public AccountService(AccountRepository accountRepository,
-                          BeneficiaryRepository beneficiaryRepository,
-                          TransactionRepository transactionRepository,
-                          AccountMapper accountMapper) {
-        this.accountRepository = accountRepository;
-        this.beneficiaryRepository = beneficiaryRepository;
-        this.transactionRepository = transactionRepository;
-        this.accountMapper = accountMapper;
-    }
 
     public List<AccountDto> findAllAccounts() {
         List<AccountEntity> accountEntityList = this.accountRepository.findAll();
@@ -58,8 +50,8 @@ public class AccountService {
     }
 
     public AccountDto createAccount(CreateAccountRequest accountToCreate) {
-        BeneficiaryEntity beneficiaryEntity = this.beneficiaryRepository.findById(accountToCreate.beneficiaryId())
-                .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + accountToCreate.beneficiaryId() + " нет."));
+        BeneficiaryEntity beneficiaryEntity = this.beneficiaryRepository.findById(accountToCreate.getBeneficiaryId())
+                .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + accountToCreate.getBeneficiaryId() + " нет."));
 
         AccountEntity accountEntity = accountMapper.dtoToEntity(accountToCreate);
         accountEntity.setBeneficiary(beneficiaryEntity);
@@ -72,16 +64,16 @@ public class AccountService {
         AccountEntity accountEntity = this.accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
-        if (!accountEntity.getPin().equals(depositAccountRequest.pin())){
+        if (!accountEntity.getPin().equals(depositAccountRequest.getPin())){
             throw new InvalidPinException("Неверный pin. Доступ отказан.");
         }
 
-        accountEntity.setBalance(accountEntity.getBalance().add(depositAccountRequest.amount()));
+        accountEntity.setBalance(accountEntity.getBalance().add(depositAccountRequest.getAmount()));
         AccountEntity savedAccountEntity = this.accountRepository.save(accountEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountEntity,
-                depositAccountRequest.amount(),
+                depositAccountRequest.getAmount(),
                 TransactionType.DEPOSIT
         ));
 
@@ -92,21 +84,21 @@ public class AccountService {
         AccountEntity accountEntity = this.accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
-        if (!accountEntity.getPin().equals(withdrawAccountRequest.pin())){
+        if (!accountEntity.getPin().equals(withdrawAccountRequest.getPin())){
             throw new InvalidPinException("Неверный pin. Доступ отказан.");
         }
 
-        BigDecimal newBalance = accountEntity.getBalance().subtract(withdrawAccountRequest.amount());
+        BigDecimal newBalance = accountEntity.getBalance().subtract(withdrawAccountRequest.getAmount());
         if (newBalance.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Недостаточно средств для вывода.");
         }
 
-        accountEntity.setBalance(accountEntity.getBalance().subtract(withdrawAccountRequest.amount()));
+        accountEntity.setBalance(accountEntity.getBalance().subtract(withdrawAccountRequest.getAmount()));
         AccountEntity savedAccountEntity = this.accountRepository.save(accountEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountEntity,
-                withdrawAccountRequest.amount().negate(),
+                withdrawAccountRequest.getAmount().negate(),
                 TransactionType.WITHDRAW
         ));
 
@@ -121,25 +113,25 @@ public class AccountService {
         AccountEntity accountToEntity = this.accountRepository.findById(accountToId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета получателя с id " + accountToId + " нет."));
 
-        if (!accountFromEntity.getPin().equals(transferAccountRequest.pin())){
+        if (!accountFromEntity.getPin().equals(transferAccountRequest.getPin())){
             throw new InvalidPinException("Неверный pin. Доступ отказан.");
         }
 
-        BigDecimal newBalance = accountFromEntity.getBalance().subtract(transferAccountRequest.amount());
+        BigDecimal newBalance = accountFromEntity.getBalance().subtract(transferAccountRequest.getAmount());
         if (newBalance.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Недостаточно средств для перевода.");
         }
 
-        accountFromEntity.setBalance(accountFromEntity.getBalance().subtract(transferAccountRequest.amount()));
+        accountFromEntity.setBalance(accountFromEntity.getBalance().subtract(transferAccountRequest.getAmount()));
         AccountEntity savedAccountFromEntity = this.accountRepository.save(accountFromEntity);
 
-        accountToEntity.setBalance(accountToEntity.getBalance().add(transferAccountRequest.amount()));
+        accountToEntity.setBalance(accountToEntity.getBalance().add(transferAccountRequest.getAmount()));
         AccountEntity savedAccountToEntity = this.accountRepository.save(accountToEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountFromEntity,
                 savedAccountToEntity,
-                transferAccountRequest.amount().negate(),
+                transferAccountRequest.getAmount().negate(),
                 TransactionType.TRANSFER
         ));
 

@@ -5,6 +5,7 @@ import com.example.bank_api.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,12 +16,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
+@RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
-
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
 
     @GetMapping
     @Operation(summary = "Получение всех транзакций",

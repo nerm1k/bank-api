@@ -1,11 +1,19 @@
 package com.example.bank_api.models.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "beneficiaries")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BeneficiaryEntity {
     @Id
     @Column(name = "beneficiary_id")
@@ -18,37 +26,4 @@ public class BeneficiaryEntity {
 
     @OneToMany(mappedBy = "beneficiary")
     private List<AccountEntity> accounts;
-
-    public BeneficiaryEntity(){
-
-    }
-
-    public BeneficiaryEntity(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<AccountEntity> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<AccountEntity> accounts) {
-        this.accounts = accounts;
-    }
 }

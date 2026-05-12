@@ -1,11 +1,19 @@
 package com.example.bank_api.models.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "accounts")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountEntity {
     @Id
     @Column(name = "account_id")
@@ -19,61 +27,7 @@ public class AccountEntity {
     @Column(name = "pin", nullable = false, length = 4)
     private String pin;
 
-//    @Column(name = "beneficiary_id", nullable = false)
-//    private Long beneficiaryId;
-
     @ManyToOne
     @JoinColumn(name = "beneficiary_id", nullable = false)
     private BeneficiaryEntity beneficiary;
-
-    public AccountEntity() {
-    }
-
-    public AccountEntity(Long id, BigDecimal balance, String pin, BeneficiaryEntity beneficiary) {
-        this.id = id;
-        this.balance = balance;
-        this.pin = pin;
-//        this.beneficiaryId = beneficiaryId;
-        this.beneficiary = beneficiary;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
-
-//    public Long getBeneficiaryId() {
-//        return beneficiaryId;
-//    }
-//
-//    public void setBeneficiaryId(Long beneficiaryId) {
-//        this.beneficiaryId = beneficiaryId;
-//    }
-
-    public BeneficiaryEntity getBeneficiary() {
-        return beneficiary;
-    }
-
-    public void setBeneficiary (BeneficiaryEntity beneficiary) {
-        this.beneficiary = beneficiary;
-    }
 }
