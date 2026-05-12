@@ -62,11 +62,16 @@ public class BeneficiaryServiceTests {
         Long beneficiaryId2 = 2L;
         String beneficiaryName2 = "Тествторой";
 
-        mockBeneficiaryEntity1 = new BeneficiaryEntity(beneficiaryId1, beneficiaryName1);
-        mockBeneficiaryEntity2 = new BeneficiaryEntity(beneficiaryId2, beneficiaryName2);
-        mockBeneficiaryDto1 = new BeneficiaryDto(beneficiaryId1, beneficiaryName1);
-        mockBeneficiaryDto2 = new BeneficiaryDto(beneficiaryId2, beneficiaryName2);
-        mockCreateBeneficiaryRequestDto = new CreateBeneficiaryRequestDto(beneficiaryName1);
+        mockBeneficiaryDto1 = new BeneficiaryDto();
+        mockBeneficiaryDto1.setId(beneficiaryId1);
+        mockBeneficiaryDto1.setName(beneficiaryName1);
+
+        mockBeneficiaryDto2 = new BeneficiaryDto();
+        mockBeneficiaryDto2.setId(beneficiaryId2);
+        mockBeneficiaryDto2.setName(beneficiaryName2);
+
+        mockCreateBeneficiaryRequestDto = new CreateBeneficiaryRequestDto();
+        mockCreateBeneficiaryRequestDto.setName(beneficiaryName1);
 
         Long accountId1 = 1L;
         Long accountId2 = 2L;
@@ -75,11 +80,29 @@ public class BeneficiaryServiceTests {
         String pin1 = "7777";
         String pin2 = "5555";
 
+        mockBeneficiaryEntity1 = new BeneficiaryEntity(beneficiaryId1, beneficiaryName1, null);
+        mockBeneficiaryEntity2 = new BeneficiaryEntity(beneficiaryId2, beneficiaryName2, null);
+
         mockAccountEntity1 = new AccountEntity(accountId1, balance1, pin1, mockBeneficiaryEntity1);
         mockAccountEntity2 = new AccountEntity(accountId2, balance2, pin2, mockBeneficiaryEntity1);
 
-        mockAccountDto1 = new AccountDto(accountId1, balance1, pin1, mockBeneficiaryEntity1.getId());
-        mockAccountDto2 = new AccountDto(accountId2, balance2, pin2, mockBeneficiaryEntity1.getId());
+        mockBeneficiaryEntity1.setAccounts(List.of(mockAccountEntity1, mockAccountEntity2));
+        mockBeneficiaryEntity2.setAccounts(List.of());
+
+        mockBeneficiaryEntity1 = new BeneficiaryEntity(beneficiaryId1, beneficiaryName1, List.of(mockAccountEntity1, mockAccountEntity2));
+        mockBeneficiaryEntity2 = new BeneficiaryEntity(beneficiaryId2, beneficiaryName2, List.of());
+
+        mockAccountDto1 = new AccountDto();
+        mockAccountDto1.setId(accountId1);
+        mockAccountDto1.setBalance(balance1);
+        mockAccountDto1.setPin(pin1);
+
+        mockAccountDto1.setBeneficiaryId(mockBeneficiaryEntity1.getId());
+        mockAccountDto2 = new AccountDto();
+        mockAccountDto2.setId(accountId2);
+        mockAccountDto2.setBalance(balance2);
+        mockAccountDto2.setPin(pin2);
+        mockAccountDto2.setBeneficiaryId(mockBeneficiaryEntity1.getId());
 
         notExistingBeneficiaryId = 4L;
     }
@@ -112,7 +135,6 @@ public class BeneficiaryServiceTests {
     @Test
     public void whenGetAllAccountsByBeneficiaryId_thenAllAccountsByBeneficiaryIdReturned(){
         when(beneficiaryRepository.findById(mockBeneficiaryEntity1.getId())).thenReturn(Optional.of(mockBeneficiaryEntity1));
-        when(accountRepository.findAllAccountsByBeneficiaryId(mockBeneficiaryEntity1.getId())).thenReturn(List.of(mockAccountEntity1, mockAccountEntity2));
         when(accountMapper.entityToDto(mockAccountEntity1)).thenReturn(mockAccountDto1);
         when(accountMapper.entityToDto(mockAccountEntity2)).thenReturn(mockAccountDto2);
 

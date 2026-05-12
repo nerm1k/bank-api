@@ -56,17 +56,37 @@ public class TransactionServiceTests {
         LocalDateTime createdAt2 = LocalDateTime.of(2026, 5, 8, 14, 40, 0);
         Long transactionId3 = 3L;
 
-        AccountEntity mockAccountEntity1 = new AccountEntity(accountFromId1, BigDecimal.valueOf(100), "7777", new BeneficiaryEntity(1L, "Тест1"));
-        AccountEntity mockAccountEntity2 = new AccountEntity(accountToId1, BigDecimal.valueOf(200), "5555", new BeneficiaryEntity(2L, "Тест2"));
-        AccountEntity mockAccountEntity3 = new AccountEntity(accountFromId2, BigDecimal.valueOf(300), "6666", new BeneficiaryEntity(3L, "Тест3"));
+        AccountEntity mockAccountEntity1 = new AccountEntity(accountFromId1, BigDecimal.valueOf(100), "7777", new BeneficiaryEntity(1L, "Тест1", null));
+        AccountEntity mockAccountEntity2 = new AccountEntity(accountToId1, BigDecimal.valueOf(200), "5555", new BeneficiaryEntity(2L, "Тест2", null));
+        AccountEntity mockAccountEntity3 = new AccountEntity(accountFromId2, BigDecimal.valueOf(300), "6666", new BeneficiaryEntity(3L, "Тест3", null));
 
         mockTransactionEntity1 = new TransactionEntity(transactionId1, mockAccountEntity1, mockAccountEntity2, balanceChange1, transactionType1, createdAt1);
         mockTransactionEntity2 = new TransactionEntity(transactionId2, mockAccountEntity3, null, balanceChange2, transactionType2, createdAt2);
         mockTransactionEntity3 = new TransactionEntity(transactionId3, mockAccountEntity1, null, balanceChange2, transactionType2, createdAt2);
 
-        mockTransactionDto1 = new TransactionDto(transactionId1, mockAccountEntity1.getId(), mockAccountEntity2.getId(), balanceChange1, transactionType1, createdAt1);
-        mockTransactionDto2 = new TransactionDto(transactionId2, mockAccountEntity3.getId(), null, balanceChange2, transactionType2, createdAt2);
-        mockTransactionDto3 = new TransactionDto(transactionId3, mockAccountEntity1.getId(), null, balanceChange2, transactionType2, createdAt2);
+        mockTransactionDto1 = new TransactionDto();
+        mockTransactionDto1.setId(transactionId1);
+        mockTransactionDto1.setAccountFromId(mockAccountEntity1.getId());
+        mockTransactionDto1.setAccountToId(mockAccountEntity2.getId());
+        mockTransactionDto1.setBalanceChange(balanceChange1);
+        mockTransactionDto1.setType(transactionType1);
+        mockTransactionDto1.setCreatedAt(createdAt1);
+
+        mockTransactionDto2 = new TransactionDto();
+        mockTransactionDto2.setId(transactionId2);
+        mockTransactionDto2.setAccountFromId(mockAccountEntity3.getId());
+        mockTransactionDto2.setAccountToId(null);
+        mockTransactionDto2.setBalanceChange(balanceChange2);
+        mockTransactionDto2.setType(transactionType2);
+        mockTransactionDto2.setCreatedAt(createdAt2);
+
+        mockTransactionDto3 = new TransactionDto();
+        mockTransactionDto3.setId(transactionId3);
+        mockTransactionDto3.setAccountFromId(mockAccountEntity1.getId());
+        mockTransactionDto3.setAccountToId(null);
+        mockTransactionDto3.setBalanceChange(balanceChange2);
+        mockTransactionDto3.setType(transactionType2);
+        mockTransactionDto3.setCreatedAt(createdAt2);
     }
 
     @Test
