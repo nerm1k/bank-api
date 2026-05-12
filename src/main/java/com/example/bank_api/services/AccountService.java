@@ -32,7 +32,7 @@ public class AccountService {
     private final AccountMapper accountMapper;
 
     public List<AccountDto> findAllAccounts() {
-        List<AccountEntity> accountEntityList = this.accountRepository.findAll();
+        List<AccountEntity> accountEntityList = accountRepository.findAll();
 
         return accountEntityList.stream()
                 .sorted(Comparator.comparing(AccountEntity::getId))
@@ -41,25 +41,25 @@ public class AccountService {
     }
 
     public AccountDto findAccountById(Long accountId) {
-        AccountEntity accountEntity = this.accountRepository.findById(accountId)
+        AccountEntity accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
         return accountMapper.entityToDto(accountEntity);
     }
 
     public AccountDto createAccount(CreateAccountRequestDto accountToCreate) {
-        BeneficiaryEntity beneficiaryEntity = this.beneficiaryRepository.findById(accountToCreate.getBeneficiaryId())
+        BeneficiaryEntity beneficiaryEntity = beneficiaryRepository.findById(accountToCreate.getBeneficiaryId())
                 .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + accountToCreate.getBeneficiaryId() + " нет."));
 
         AccountEntity accountEntity = accountMapper.dtoToEntity(accountToCreate);
         accountEntity.setBeneficiary(beneficiaryEntity);
-        AccountEntity savedAccountEntity = this.accountRepository.save(accountEntity);
+        AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
 
         return accountMapper.entityToDto(savedAccountEntity);
     }
 
     public AccountDto depositAccount(Long accountId, OperationsAccountRequestDto depositAccountRequest) {
-        AccountEntity accountEntity = this.accountRepository.findById(accountId)
+        AccountEntity accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
         if (!accountEntity.getPin().equals(depositAccountRequest.getPin())){
@@ -67,7 +67,7 @@ public class AccountService {
         }
 
         accountEntity.setBalance(accountEntity.getBalance().add(depositAccountRequest.getAmount()));
-        AccountEntity savedAccountEntity = this.accountRepository.save(accountEntity);
+        AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountEntity,
@@ -79,7 +79,7 @@ public class AccountService {
     }
 
     public AccountDto withdrawFromAccount(Long accountId, OperationsAccountRequestDto withdrawAccountRequest) {
-        AccountEntity accountEntity = this.accountRepository.findById(accountId)
+        AccountEntity accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
         if (!accountEntity.getPin().equals(withdrawAccountRequest.getPin())){
@@ -92,7 +92,7 @@ public class AccountService {
         }
 
         accountEntity.setBalance(accountEntity.getBalance().subtract(withdrawAccountRequest.getAmount()));
-        AccountEntity savedAccountEntity = this.accountRepository.save(accountEntity);
+        AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountEntity,
@@ -105,10 +105,10 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> transferFromAccountToAccount(Long accountFromId, Long accountToId, OperationsAccountRequestDto transferAccountRequest) {
-        AccountEntity accountFromEntity = this.accountRepository.findById(accountFromId)
+        AccountEntity accountFromEntity = accountRepository.findById(accountFromId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета отправителя с id " + accountFromId + " нет."));
 
-        AccountEntity accountToEntity = this.accountRepository.findById(accountToId)
+        AccountEntity accountToEntity = accountRepository.findById(accountToId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета получателя с id " + accountToId + " нет."));
 
         if (!accountFromEntity.getPin().equals(transferAccountRequest.getPin())){
@@ -121,10 +121,10 @@ public class AccountService {
         }
 
         accountFromEntity.setBalance(accountFromEntity.getBalance().subtract(transferAccountRequest.getAmount()));
-        AccountEntity savedAccountFromEntity = this.accountRepository.save(accountFromEntity);
+        AccountEntity savedAccountFromEntity = accountRepository.save(accountFromEntity);
 
         accountToEntity.setBalance(accountToEntity.getBalance().add(transferAccountRequest.getAmount()));
-        AccountEntity savedAccountToEntity = this.accountRepository.save(accountToEntity);
+        AccountEntity savedAccountToEntity = accountRepository.save(accountToEntity);
 
         transactionRepository.save(new TransactionEntity(
                 savedAccountFromEntity,

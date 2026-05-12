@@ -33,13 +33,13 @@ public class BeneficiaryService {
 
     public BeneficiaryDto createBeneficiary(CreateBeneficiaryRequestDto beneficiaryToCreate) {
         BeneficiaryEntity beneficiaryEntity = beneficiaryMapper.requestDtoToEntity(beneficiaryToCreate);
-        BeneficiaryEntity savedBeneficiaryEntity = this.beneficiaryRepository.save(beneficiaryEntity);
+        BeneficiaryEntity savedBeneficiaryEntity = beneficiaryRepository.save(beneficiaryEntity);
 
         return beneficiaryMapper.entityToDto(savedBeneficiaryEntity);
     }
 
     public List<AccountDto> findAllAccountsByBeneficiaryId(Long beneficiaryId) {
-        BeneficiaryEntity beneficiaryEntity = this.beneficiaryRepository.findById(beneficiaryId)
+        BeneficiaryEntity beneficiaryEntity = beneficiaryRepository.findById(beneficiaryId)
                 .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + beneficiaryId + " нет."));
 
         List<AccountEntity>  accountEntityList = beneficiaryEntity.getAccounts();

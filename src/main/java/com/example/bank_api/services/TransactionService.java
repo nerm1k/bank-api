@@ -18,7 +18,7 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
 
     public List<TransactionDto> findAllTransactions() {
-        List<TransactionEntity> transactionEntityList = this.transactionRepository.findAll();
+        List<TransactionEntity> transactionEntityList = transactionRepository.findAll();
 
         return transactionEntityList.stream()
                 .map(transactionMapper::entityToDto)
@@ -26,7 +26,7 @@ public class TransactionService {
     }
 
     public List<TransactionDto> findAllTransactionsByAccountId(Long accountId) {
-        List<TransactionEntity> transactionEntityList = this.transactionRepository.findAllTransactionsByAccountFromId(accountId);
+        List<TransactionEntity> transactionEntityList = transactionRepository.findAllTransactionsByAccountFromId(accountId);
         return transactionEntityList.stream()
                 .map(transactionMapper::entityToDto)
                 .collect(Collectors.toList());
