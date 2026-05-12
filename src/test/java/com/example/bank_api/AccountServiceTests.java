@@ -1,9 +1,8 @@
 package com.example.bank_api;
 
 import com.example.bank_api.exceptions.InvalidPinException;
-import com.example.bank_api.models.dto.request.CreateAccountRequest;
-import com.example.bank_api.models.dto.request.CreateBeneficiaryRequest;
-import com.example.bank_api.models.dto.request.OperationsAccountRequest;
+import com.example.bank_api.models.dto.request.CreateAccountRequestDto;
+import com.example.bank_api.models.dto.request.OperationsAccountRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.models.entity.AccountEntity;
 import com.example.bank_api.models.entity.BeneficiaryEntity;
@@ -50,8 +49,8 @@ public class AccountServiceTests {
     private static AccountDto mockAccountDto3;
     private static BeneficiaryEntity mockBeneficiaryEntity1;
     private static BeneficiaryEntity mockBeneficiaryEntity2;
-    private static CreateAccountRequest mockCreateAccountRequest;
-    private static OperationsAccountRequest mockOperationsAccountRequest;
+    private static CreateAccountRequestDto mockCreateAccountRequestDto;
+    private static OperationsAccountRequestDto mockOperationsAccountRequestDto;
     private static Long notExistingBeneficiaryId;
     private static Long notExistingAccountId;
 
@@ -83,9 +82,9 @@ public class AccountServiceTests {
         mockAccountDto2 = new AccountDto(accountId2, balance2, pin2, mockBeneficiaryEntity1.getId());
         mockAccountDto3 = new AccountDto(accountId3, balance3, pin3, mockBeneficiaryEntity2.getId());
 
-        mockCreateAccountRequest = new CreateAccountRequest("3333", beneficiaryId2);
+        mockCreateAccountRequestDto = new CreateAccountRequestDto("3333", beneficiaryId2);
 
-        mockOperationsAccountRequest = new OperationsAccountRequest(mockAccountEntity1.getPin(), BigDecimal.valueOf(15));
+        mockOperationsAccountRequestDto = new OperationsAccountRequestDto(mockAccountEntity1.getPin(), BigDecimal.valueOf(15));
 
         notExistingBeneficiaryId = 4L;
         notExistingAccountId = 50L;
@@ -130,29 +129,29 @@ public class AccountServiceTests {
         Long newAccountId = 4L;
 
         AccountEntity mappedAccountEntity = new AccountEntity();
-        mappedAccountEntity.setPin(mockCreateAccountRequest.pin());
+        mappedAccountEntity.setPin(mockCreateAccountRequestDto.pin());
         mappedAccountEntity.setBalance(BigDecimal.valueOf(0));
 
         AccountEntity savedAccountEntity = new AccountEntity(
                 newAccountId,
                 BigDecimal.valueOf(0),
-                mockCreateAccountRequest.pin(),
+                mockCreateAccountRequestDto.pin(),
                 mockBeneficiaryEntity2
         );
 
         AccountDto newAccountDto = new AccountDto(
                 newAccountId,
                 BigDecimal.valueOf(0),
-                mockCreateAccountRequest.pin(),
+                mockCreateAccountRequestDto.pin(),
                 mockBeneficiaryEntity2.getId()
         );
 
-        when(beneficiaryRepository.findById(mockCreateAccountRequest.beneficiaryId())).thenReturn(Optional.of(mockBeneficiaryEntity2));
-        when(accountMapper.dtoToEntity(mockCreateAccountRequest)).thenReturn(mappedAccountEntity);
+        when(beneficiaryRepository.findById(mockCreateAccountRequestDto.beneficiaryId())).thenReturn(Optional.of(mockBeneficiaryEntity2));
+        when(accountMapper.dtoToEntity(mockCreateAccountRequestDto)).thenReturn(mappedAccountEntity);
         when(accountRepository.save(mappedAccountEntity)).thenReturn(savedAccountEntity);
         when(accountMapper.entityToDto(savedAccountEntity)).thenReturn(newAccountDto);
 
-        AccountDto result = accountService.createAccount(mockCreateAccountRequest);
+        AccountDto result = accountService.createAccount(mockCreateAccountRequestDto);
 
         assertNotNull(result);
         assertEquals(newAccountDto, result);
@@ -163,14 +162,14 @@ public class AccountServiceTests {
         when(beneficiaryRepository.findById(notExistingBeneficiaryId)).thenReturn(Optional.empty());
 
         EntityNotFoundException thrown =  assertThrows(EntityNotFoundException.class,
-                () -> accountService.createAccount(new CreateAccountRequest("3333", notExistingBeneficiaryId)));
+                () -> accountService.createAccount(new CreateAccountRequestDto("3333", notExistingBeneficiaryId)));
 
         assertEquals("Клиента с id " + notExistingBeneficiaryId + " нет.", thrown.getMessage());
     }
 
     @Test
     public void whenDepositAccountSuccessfully_thenAccountReturned(){
-        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().add(mockOperationsAccountRequest.amount()));
+        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().add(mockOperationsAccountRequestDto.amount()));
         AccountDto savedAccountDto1 = new AccountDto(
                 mockAccountEntity1.getId(),
                 mockAccountEntity1.getBalance(),
@@ -182,7 +181,7 @@ public class AccountServiceTests {
         when(accountRepository.save(mockAccountEntity1)).thenReturn(mockAccountEntity1);
         when(accountMapper.entityToDto(mockAccountEntity1)).thenReturn(savedAccountDto1);
 
-        AccountDto result = accountService.depositAccount(mockAccountEntity1.getId(), mockOperationsAccountRequest);
+        AccountDto result = accountService.depositAccount(mockAccountEntity1.getId(), mockOperationsAccountRequestDto);
 
         assertNotNull(result);
         assertEquals(savedAccountDto1, result);
@@ -193,7 +192,7 @@ public class AccountServiceTests {
         when(accountRepository.findById(notExistingAccountId)).thenReturn(Optional.empty());
 
         EntityNotFoundException thrown =  assertThrows(EntityNotFoundException.class,
-                () -> accountService.depositAccount(notExistingAccountId, mockOperationsAccountRequest));
+                () -> accountService.depositAccount(notExistingAccountId, mockOperationsAccountRequestDto));
 
         assertEquals("Счета с id " + notExistingAccountId + " нет.", thrown.getMessage());
     }
@@ -203,14 +202,14 @@ public class AccountServiceTests {
         when(accountRepository.findById(mockAccountEntity1.getId())).thenReturn(Optional.of(mockAccountEntity1));
 
         InvalidPinException thrown =  assertThrows(InvalidPinException.class,
-                () -> accountService.depositAccount(mockAccountEntity1.getId(), new OperationsAccountRequest("1244", BigDecimal.valueOf(111))));
+                () -> accountService.depositAccount(mockAccountEntity1.getId(), new OperationsAccountRequestDto("1244", BigDecimal.valueOf(111))));
 
         assertEquals("Неверный pin. Доступ отказан.", thrown.getMessage());
     }
 
     @Test
     public void whenWithdrawFromAccountSuccessfully_thenAccountReturned(){
-        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().subtract(mockOperationsAccountRequest.amount()));
+        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().subtract(mockOperationsAccountRequestDto.amount()));
         AccountDto savedAccountDto1 = new AccountDto(
                 mockAccountEntity1.getId(),
                 mockAccountEntity1.getBalance(),
@@ -222,7 +221,7 @@ public class AccountServiceTests {
         when(accountRepository.save(mockAccountEntity1)).thenReturn(mockAccountEntity1);
         when(accountMapper.entityToDto(mockAccountEntity1)).thenReturn(savedAccountDto1);
 
-        AccountDto result = accountService.withdrawFromAccount(mockAccountEntity1.getId(), mockOperationsAccountRequest);
+        AccountDto result = accountService.withdrawFromAccount(mockAccountEntity1.getId(), mockOperationsAccountRequestDto);
 
         assertNotNull(result);
         assertEquals(savedAccountDto1, result);
@@ -233,7 +232,7 @@ public class AccountServiceTests {
         when(accountRepository.findById(notExistingAccountId)).thenReturn(Optional.empty());
 
         EntityNotFoundException thrown =  assertThrows(EntityNotFoundException.class,
-                () -> accountService.withdrawFromAccount(notExistingAccountId, mockOperationsAccountRequest));
+                () -> accountService.withdrawFromAccount(notExistingAccountId, mockOperationsAccountRequestDto));
 
         assertEquals("Счета с id " + notExistingAccountId + " нет.", thrown.getMessage());
     }
@@ -243,7 +242,7 @@ public class AccountServiceTests {
         when(accountRepository.findById(mockAccountEntity1.getId())).thenReturn(Optional.of(mockAccountEntity1));
 
         InvalidPinException thrown =  assertThrows(InvalidPinException.class,
-                () -> accountService.withdrawFromAccount(mockAccountEntity1.getId(), new OperationsAccountRequest("1244", BigDecimal.valueOf(111))));
+                () -> accountService.withdrawFromAccount(mockAccountEntity1.getId(), new OperationsAccountRequestDto("1244", BigDecimal.valueOf(111))));
 
         assertEquals("Неверный pin. Доступ отказан.", thrown.getMessage());
     }
@@ -253,7 +252,7 @@ public class AccountServiceTests {
         when(accountRepository.findById(mockAccountEntity1.getId())).thenReturn(Optional.of(mockAccountEntity1));
 
         IllegalArgumentException thrown =  assertThrows(IllegalArgumentException.class,
-                () -> accountService.withdrawFromAccount(mockAccountEntity1.getId(), new OperationsAccountRequest(mockAccountEntity1.getPin(),
+                () -> accountService.withdrawFromAccount(mockAccountEntity1.getId(), new OperationsAccountRequestDto(mockAccountEntity1.getPin(),
                                                                                                                     BigDecimal.valueOf(555555L))));
 
         assertEquals("Недостаточно средств для вывода.", thrown.getMessage());
@@ -261,8 +260,8 @@ public class AccountServiceTests {
 
     @Test
     public void whenDepositFromAccountToAccountSuccessfully_thenAccountsReturned(){
-        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().subtract(mockOperationsAccountRequest.amount()));
-        mockAccountEntity3.setBalance(mockAccountEntity3.getBalance().add(mockOperationsAccountRequest.amount()));
+        mockAccountEntity1.setBalance(mockAccountEntity1.getBalance().subtract(mockOperationsAccountRequestDto.amount()));
+        mockAccountEntity3.setBalance(mockAccountEntity3.getBalance().add(mockOperationsAccountRequestDto.amount()));
         AccountDto savedAccountDto1 = new AccountDto(
                 mockAccountEntity1.getId(),
                 mockAccountEntity1.getBalance(),
@@ -285,7 +284,7 @@ public class AccountServiceTests {
 
         List<AccountDto> result = accountService.transferFromAccountToAccount(mockAccountEntity1.getId(),
                                                                                 mockAccountEntity3.getId(),
-                                                                                mockOperationsAccountRequest);
+                mockOperationsAccountRequestDto);
 
         assertNotNull(result);
         assertEquals(List.of(savedAccountDto1, savedAccountDto2), result);
@@ -298,7 +297,7 @@ public class AccountServiceTests {
         EntityNotFoundException thrown =  assertThrows(EntityNotFoundException.class,
                 () -> accountService.transferFromAccountToAccount(notExistingAccountId,
                                                                     mockAccountEntity3.getId(),
-                                                                    mockOperationsAccountRequest));
+                        mockOperationsAccountRequestDto));
 
         assertEquals("Счета отправителя с id " + notExistingAccountId + " нет.", thrown.getMessage());
     }
@@ -311,7 +310,7 @@ public class AccountServiceTests {
         EntityNotFoundException thrown =  assertThrows(EntityNotFoundException.class,
                 () -> accountService.transferFromAccountToAccount(mockAccountEntity1.getId(),
                                                                     notExistingAccountId,
-                                                                    mockOperationsAccountRequest));
+                        mockOperationsAccountRequestDto));
 
         assertEquals("Счета получателя с id " + notExistingAccountId + " нет.", thrown.getMessage());
     }
@@ -324,7 +323,7 @@ public class AccountServiceTests {
         InvalidPinException thrown =  assertThrows(InvalidPinException.class,
                 () -> accountService.transferFromAccountToAccount(mockAccountEntity1.getId(),
                                                             mockAccountEntity3.getId(),
-                                                            new OperationsAccountRequest("2221", BigDecimal.valueOf(2L))));
+                                                            new OperationsAccountRequestDto("2221", BigDecimal.valueOf(2L))));
 
         assertEquals("Неверный pin. Доступ отказан.", thrown.getMessage());
     }
@@ -337,7 +336,7 @@ public class AccountServiceTests {
         IllegalArgumentException thrown =  assertThrows(IllegalArgumentException.class,
                 () -> accountService.transferFromAccountToAccount(mockAccountEntity1.getId(),
                                                             mockAccountEntity3.getId(),
-                                                            new OperationsAccountRequest(mockAccountEntity1.getPin(), BigDecimal.valueOf(555555L))));
+                                                            new OperationsAccountRequestDto(mockAccountEntity1.getPin(), BigDecimal.valueOf(555555L))));
 
         assertEquals("Недостаточно средств для перевода.", thrown.getMessage());
     }

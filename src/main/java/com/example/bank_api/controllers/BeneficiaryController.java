@@ -1,6 +1,6 @@
 package com.example.bank_api.controllers;
 
-import com.example.bank_api.models.dto.request.CreateBeneficiaryRequest;
+import com.example.bank_api.models.dto.request.CreateBeneficiaryRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.models.dto.response.BeneficiaryDto;
 import com.example.bank_api.services.BeneficiaryService;
@@ -34,7 +34,7 @@ public class BeneficiaryController {
             @ApiResponse(responseCode = "400", description = "Клиент не создан, ошибка в запросе.")
     })
     public ResponseEntity<BeneficiaryDto> createBeneficiary(
-            @Valid @RequestBody CreateBeneficiaryRequest beneficiaryToCreate
+            @Valid @RequestBody CreateBeneficiaryRequestDto beneficiaryToCreate
     ){
         return ResponseEntity.status(201).body(beneficiaryService.createBeneficiary(beneficiaryToCreate));
     }

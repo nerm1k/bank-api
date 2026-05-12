@@ -1,8 +1,8 @@
 package com.example.bank_api.services;
 
 import com.example.bank_api.exceptions.InvalidPinException;
-import com.example.bank_api.models.dto.request.CreateAccountRequest;
-import com.example.bank_api.models.dto.request.OperationsAccountRequest;
+import com.example.bank_api.models.dto.request.CreateAccountRequestDto;
+import com.example.bank_api.models.dto.request.OperationsAccountRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.models.entity.AccountEntity;
 import com.example.bank_api.models.entity.BeneficiaryEntity;
@@ -13,8 +13,6 @@ import com.example.bank_api.repositories.AccountRepository;
 import com.example.bank_api.repositories.BeneficiaryRepository;
 import com.example.bank_api.repositories.TransactionRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +47,7 @@ public class AccountService {
         return accountMapper.entityToDto(accountEntity);
     }
 
-    public AccountDto createAccount(CreateAccountRequest accountToCreate) {
+    public AccountDto createAccount(CreateAccountRequestDto accountToCreate) {
         BeneficiaryEntity beneficiaryEntity = this.beneficiaryRepository.findById(accountToCreate.getBeneficiaryId())
                 .orElseThrow(() -> new EntityNotFoundException("Клиента с id " + accountToCreate.getBeneficiaryId() + " нет."));
 
@@ -60,7 +58,7 @@ public class AccountService {
         return accountMapper.entityToDto(savedAccountEntity);
     }
 
-    public AccountDto depositAccount(Long accountId, OperationsAccountRequest depositAccountRequest) {
+    public AccountDto depositAccount(Long accountId, OperationsAccountRequestDto depositAccountRequest) {
         AccountEntity accountEntity = this.accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
@@ -80,7 +78,7 @@ public class AccountService {
         return accountMapper.entityToDto(savedAccountEntity);
     }
 
-    public AccountDto withdrawFromAccount(Long accountId, OperationsAccountRequest withdrawAccountRequest) {
+    public AccountDto withdrawFromAccount(Long accountId, OperationsAccountRequestDto withdrawAccountRequest) {
         AccountEntity accountEntity = this.accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
 
@@ -106,7 +104,7 @@ public class AccountService {
     }
 
     @Transactional
-    public List<AccountDto> transferFromAccountToAccount(Long accountFromId, Long accountToId, OperationsAccountRequest transferAccountRequest) {
+    public List<AccountDto> transferFromAccountToAccount(Long accountFromId, Long accountToId, OperationsAccountRequestDto transferAccountRequest) {
         AccountEntity accountFromEntity = this.accountRepository.findById(accountFromId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета отправителя с id " + accountFromId + " нет."));
 

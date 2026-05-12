@@ -1,6 +1,6 @@
 package com.example.bank_api;
 
-import com.example.bank_api.models.dto.request.CreateBeneficiaryRequest;
+import com.example.bank_api.models.dto.request.CreateBeneficiaryRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.models.dto.response.BeneficiaryDto;
 import com.example.bank_api.models.entity.AccountEntity;
@@ -11,25 +11,20 @@ import com.example.bank_api.repositories.AccountRepository;
 import com.example.bank_api.repositories.BeneficiaryRepository;
 import com.example.bank_api.services.BeneficiaryService;
 import jakarta.persistence.EntityNotFoundException;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -55,7 +50,7 @@ public class BeneficiaryServiceTests {
     static BeneficiaryDto mockBeneficiaryDto2;
     private static AccountDto mockAccountDto1;
     private static AccountDto mockAccountDto2;
-    static CreateBeneficiaryRequest mockCreateBeneficiaryRequest;
+    static CreateBeneficiaryRequestDto mockCreateBeneficiaryRequestDto;
 
     private static Long notExistingBeneficiaryId;
 
@@ -71,7 +66,7 @@ public class BeneficiaryServiceTests {
         mockBeneficiaryEntity2 = new BeneficiaryEntity(beneficiaryId2, beneficiaryName2);
         mockBeneficiaryDto1 = new BeneficiaryDto(beneficiaryId1, beneficiaryName1);
         mockBeneficiaryDto2 = new BeneficiaryDto(beneficiaryId2, beneficiaryName2);
-        mockCreateBeneficiaryRequest = new CreateBeneficiaryRequest(beneficiaryName1);
+        mockCreateBeneficiaryRequestDto = new CreateBeneficiaryRequestDto(beneficiaryName1);
 
         Long accountId1 = 1L;
         Long accountId2 = 2L;
@@ -104,11 +99,11 @@ public class BeneficiaryServiceTests {
 
     @Test
     public void whenCreateBeneficiary_thenNewBeneficiaryReturned(){
-        when(beneficiaryMapper.requestDtoToEntity(mockCreateBeneficiaryRequest)).thenReturn(mockBeneficiaryEntity1);
+        when(beneficiaryMapper.requestDtoToEntity(mockCreateBeneficiaryRequestDto)).thenReturn(mockBeneficiaryEntity1);
         when(beneficiaryRepository.save(mockBeneficiaryEntity1)).thenReturn(mockBeneficiaryEntity1);
         when(beneficiaryMapper.entityToDto(mockBeneficiaryEntity1)).thenReturn(mockBeneficiaryDto1);
 
-        BeneficiaryDto result = beneficiaryService.createBeneficiary(mockCreateBeneficiaryRequest);
+        BeneficiaryDto result = beneficiaryService.createBeneficiary(mockCreateBeneficiaryRequestDto);
 
         assertNotNull(result);
         assertEquals(mockBeneficiaryDto1, result);

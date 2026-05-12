@@ -1,14 +1,12 @@
 package com.example.bank_api.models.dto.request;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class CreateBeneficiaryRequest{
+public class CreateBeneficiaryRequestDto {
 
         @NotNull(message = "Имя клиента не может быть пустым.")
         @Size(min = 2, max = 32, message = "Имя клиента должно содержать от 2 до 32 символов.")

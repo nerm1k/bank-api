@@ -1,16 +1,14 @@
 package com.example.bank_api.services;
 
-import com.example.bank_api.models.dto.request.CreateBeneficiaryRequest;
+import com.example.bank_api.models.dto.request.CreateBeneficiaryRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.models.dto.response.BeneficiaryDto;
 import com.example.bank_api.models.entity.AccountEntity;
 import com.example.bank_api.models.entity.BeneficiaryEntity;
 import com.example.bank_api.models.mappers.AccountMapper;
 import com.example.bank_api.models.mappers.BeneficiaryMapper;
-import com.example.bank_api.repositories.AccountRepository;
 import com.example.bank_api.repositories.BeneficiaryRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +31,7 @@ public class BeneficiaryService {
                 .collect(Collectors.toList());
     }
 
-    public BeneficiaryDto createBeneficiary(CreateBeneficiaryRequest beneficiaryToCreate) {
+    public BeneficiaryDto createBeneficiary(CreateBeneficiaryRequestDto beneficiaryToCreate) {
         BeneficiaryEntity beneficiaryEntity = beneficiaryMapper.requestDtoToEntity(beneficiaryToCreate);
         BeneficiaryEntity savedBeneficiaryEntity = this.beneficiaryRepository.save(beneficiaryEntity);
 

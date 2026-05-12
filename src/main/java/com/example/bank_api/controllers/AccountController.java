@@ -1,14 +1,12 @@
 package com.example.bank_api.controllers;
 
-import com.example.bank_api.exceptions.InvalidPinException;
-import com.example.bank_api.models.dto.request.CreateAccountRequest;
-import com.example.bank_api.models.dto.request.OperationsAccountRequest;
+import com.example.bank_api.models.dto.request.CreateAccountRequestDto;
+import com.example.bank_api.models.dto.request.OperationsAccountRequestDto;
 import com.example.bank_api.models.dto.response.AccountDto;
 import com.example.bank_api.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +50,7 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "Данный клиент отсутствует.")
     })
     public ResponseEntity<AccountDto> createAccount(
-            @Valid @RequestBody CreateAccountRequest accountToCreate
+            @Valid @RequestBody CreateAccountRequestDto accountToCreate
     ){
         return ResponseEntity.status(201).body(accountService.createAccount(accountToCreate));
     }
@@ -68,7 +66,7 @@ public class AccountController {
     })
     public ResponseEntity<AccountDto> depositAccount(
             @PathVariable(value = "accountId") Long accountId,
-            @Valid @RequestBody OperationsAccountRequest depositAccountRequest
+            @Valid @RequestBody OperationsAccountRequestDto depositAccountRequest
     ){
         return ResponseEntity.status(201).body(accountService.depositAccount(accountId, depositAccountRequest));
     }
@@ -84,7 +82,7 @@ public class AccountController {
     })
     public ResponseEntity<AccountDto> withdrawFromAccount(
             @PathVariable(value = "accountId") Long accountId,
-            @Valid @RequestBody OperationsAccountRequest withdrawAccountRequest
+            @Valid @RequestBody OperationsAccountRequestDto withdrawAccountRequest
     ){
         return ResponseEntity.status(201).body(accountService.withdrawFromAccount(accountId, withdrawAccountRequest));
     }
@@ -101,7 +99,7 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> transferFromAccountToAccount(
         @PathVariable(name = "accountFromId") Long accountFromId,
         @PathVariable(name = "accountToId") Long accountToId,
-        @Valid @RequestBody OperationsAccountRequest transferAccountRequest
+        @Valid @RequestBody OperationsAccountRequestDto transferAccountRequest
     ){
         return ResponseEntity.status(201).body(accountService.transferFromAccountToAccount(accountFromId, accountToId, transferAccountRequest));
     }
