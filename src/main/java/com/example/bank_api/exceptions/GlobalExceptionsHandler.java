@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionsHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException ex){
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
-        errorResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST).setMessage(ex.getMessage());
-        return ResponseEntity.status(400).body(errorResponseDto);
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex){
+//        ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+//        errorResponseDto.setHttpStatus(HttpStatus.BAD_REQUEST).setMessage(ex.getMessage());
+//        return ResponseEntity.status(400).body(errorResponseDto);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        //Везде по такому принципу.
     }
 
     @ExceptionHandler(InvalidPinException.class)

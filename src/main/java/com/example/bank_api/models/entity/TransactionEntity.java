@@ -2,6 +2,7 @@ package com.example.bank_api.models.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder  //чтобы не делать несколько конструкторов для выборочного заполнения полей, можно использовать паттерн Builder. Пример в сервисе.
 public class TransactionEntity {
     @Id
     @Column(name = "transaction_id")
@@ -39,6 +41,9 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
+    // заполнение этого поля ты решил на откуп БД отдать. Это не очевидно, и в хибере оно будет null, если не скачать сущность после сохранения.
+    // Мы для наглядности явно указываем setCreatedAt(LocalDateTime.now()).
+    // Ну или @CreationTimestamp сюда поставить.
     @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
