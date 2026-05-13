@@ -14,5 +14,5 @@ public class CreateBeneficiaryRequestDto {
         @Size(min = 2, max = 32, message = "Имя клиента должно содержать от 2 до 32 символов.")
         @Pattern(regexp = "[А-ЯЁ][а-яё]+", message = "Имя должно соответствовать паттерну [А-Яа-яЁё]+.")
         @Schema(description = "Имя клиента", requiredMode = Schema.RequiredMode.REQUIRED)
-        String name;
+        private String name;
 }

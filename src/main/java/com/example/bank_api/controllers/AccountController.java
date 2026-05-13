@@ -38,7 +38,7 @@ public class AccountController {
     public ResponseEntity<AccountDto> getAccountById(
             @PathVariable(value = "accountId") Long accountId
     ){
-        return ResponseEntity.status(200).body(accountService.findAccountById(accountId));
+        return ResponseEntity.ok(accountService.findAccountById(accountId));
     }
 
     @PostMapping
@@ -68,7 +68,8 @@ public class AccountController {
             @PathVariable(value = "accountId") Long accountId,
             @Valid @RequestBody OperationsAccountRequestDto depositAccountRequest
     ){
-        return ResponseEntity.status(201).body(accountService.depositAccount(accountId, depositAccountRequest));
+        return ResponseEntity.ok(accountService.depositAccount(accountId, depositAccountRequest));  //хоть это и post, но новый ресурс (счет) не создается, поэтому ответ 200.
+        //  Если бы финансовые операции были реализованы в TransactionalController, тогда 201 был бы логичен.
     }
 
     @PostMapping("/{accountId}/withdraw")
@@ -84,7 +85,7 @@ public class AccountController {
             @PathVariable(value = "accountId") Long accountId,
             @Valid @RequestBody OperationsAccountRequestDto withdrawAccountRequest
     ){
-        return ResponseEntity.status(201).body(accountService.withdrawFromAccount(accountId, withdrawAccountRequest));
+        return ResponseEntity.ok(accountService.withdrawFromAccount(accountId, withdrawAccountRequest));
     }
 
     @PostMapping("/{accountFromId}/transfer/{accountToId}")
@@ -101,7 +102,7 @@ public class AccountController {
         @PathVariable(name = "accountToId") Long accountToId,
         @Valid @RequestBody OperationsAccountRequestDto transferAccountRequest
     ){
-        return ResponseEntity.status(201).body(accountService.transferFromAccountToAccount(accountFromId, accountToId, transferAccountRequest));
+        return ResponseEntity.ok(accountService.transferFromAccountToAccount(accountFromId, accountToId, transferAccountRequest));
     }
 
 }

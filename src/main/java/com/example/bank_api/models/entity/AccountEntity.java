@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountEntity {
+public class AccountEntity {   // не надо называть сущности "...Entity" . Просто Account, Beneficiary, Transaction
     @Id
     @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acc_seq")

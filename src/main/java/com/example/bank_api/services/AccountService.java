@@ -58,6 +58,7 @@ public class AccountService {
         return accountMapper.entityToDto(savedAccountEntity);
     }
 
+    @Transactional //возможна неконсистентность при откате transactionRepository.save
     public AccountDto depositAccount(Long accountId, OperationsAccountRequestDto depositAccountRequest) {
         AccountEntity accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
@@ -65,6 +66,7 @@ public class AccountService {
         if (!accountEntity.getPin().equals(depositAccountRequest.getPin())){
             throw new InvalidPinException("Неверный pin. Доступ отказан.");
         }
+
 
         accountEntity.setBalance(accountEntity.getBalance().add(depositAccountRequest.getAmount()));
         AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
@@ -75,9 +77,20 @@ public class AccountService {
                 TransactionType.DEPOSIT
         ));
 
+
+//       Это пример с Builder (см. TransactionEntity)
+//        transactionRepository.save(TransactionEntity.builder()
+//                .accountFrom(savedAccountEntity)
+//                .balanceChange(depositAccountRequest.getAmount())
+//                .transactionType(TransactionType.DEPOSIT)
+//                .build()
+//        );
+//
+
         return accountMapper.entityToDto(savedAccountEntity);
     }
 
+    @Transactional
     public AccountDto withdrawFromAccount(Long accountId, OperationsAccountRequestDto withdrawAccountRequest) {
         AccountEntity accountEntity = accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счета с id " + accountId + " нет."));
@@ -92,6 +105,7 @@ public class AccountService {
         }
 
         accountEntity.setBalance(accountEntity.getBalance().subtract(withdrawAccountRequest.getAmount()));
+//        accountEntity.setBalance(newBalance);
         AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
 
         transactionRepository.save(new TransactionEntity(

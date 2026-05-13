@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+//@SpringBootTest   //это для интеграционных тестов, с этой аннотацией поднимается весь контекст (очень медленно). Для юнит-тестов нужен только @ExtendWith
 public class AccountServiceTests {
     @Mock
     AccountRepository accountRepository;
@@ -42,6 +42,10 @@ public class AccountServiceTests {
     @InjectMocks
     AccountService accountService;
 
+    //Не надо в названиях тестовых объектов использовать "mock". Мы их не мокируем.
+    //Обычные названия -   AccountEntity senderAccount; AccountEntity receiverAccount;
+
+    //
     private static AccountEntity mockAccountEntity1;
     private static AccountEntity mockAccountEntity2;
     private static AccountEntity mockAccountEntity3;
@@ -55,7 +59,8 @@ public class AccountServiceTests {
     private static Long notExistingBeneficiaryId;
     private static Long notExistingAccountId;
 
-
+    //BeforeAll выполняется 1 раз перед всеми тестами. У тебя static поля, т.е. общие для класса. Тесты становятся зависимыми друг от друга, если ты состояние этих объектов меняешь.
+    //Тут нужен @BeforeEach и не static поля.
     @BeforeAll
     public static void setup(){
         Long beneficiaryId1 = 1L;
@@ -82,6 +87,11 @@ public class AccountServiceTests {
 
         mockBeneficiaryEntity1.setAccounts(List.of(mockAccountEntity1, mockAccountEntity2));
         mockBeneficiaryEntity2.setAccounts(List.of(mockAccountEntity3));
+        //Можно поставить @Accessors(chain = true) и использовать цепочку сеттеров.
+//        mockAccountDto1 = new AccountDto()
+//                .setId(accountId1)
+//                .setBalance(balance1)
+//                ...
 
         mockAccountDto1 = new AccountDto();
         mockAccountDto1.setId(accountId1);
